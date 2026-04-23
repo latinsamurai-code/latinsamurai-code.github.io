@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eiji Han Shimizu | Latin Samurai</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --black: #0a0a0a;
+      --white: #f8f6f1;
+      --gold: #c9a84c;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--black); color: var(--white); font-family: 'Montserrat', sans-serif; font-weight: 300; overflow-x: hidden; }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 12px 32px; display: flex; align-items: center; justify-content: space-between;
+      background: rgba(10,10,10,0.9); backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 0.95rem; font-weight: 400; letter-spacing: 0.14em; white-space: nowrap; color: var(--white); text-decoration: none; flex-shrink: 0; }
+    .nav-links { display: flex; gap: 20px; list-style: none; }
+    .nav-links a { color: rgba(248,246,241,0.65); text-decoration: none; font-size: 0.58rem; letter-spacing: 0.15em; text-transform: uppercase; transition: color 0.2s; white-space: nowrap; }
+    .nav-links a:hover { color: var(--gold); }
+
+    #hero { height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; position: relative; overflow: hidden; }
+    .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse at center, #1a1612 0%, #0a0a0a 70%); }
+    .hero-bg::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 20% 50%, rgba(201,168,76,0.06) 0%, transparent 50%), radial-gradient(circle at 80% 30%, rgba(201,168,76,0.04) 0%, transparent 40%); }
+    .hero-content { position: relative; z-index: 1; }
+    .hero-eyebrow { font-size: 0.65rem; letter-spacing: 0.35em; text-transform: uppercase; color: var(--gold); margin-bottom: 24px; opacity: 0; animation: fadeUp 1s ease forwards 0.3s; }
+    .hero-name { font-family: 'Cormorant Garamond', serif; font-size: clamp(3.5rem, 8vw, 7rem); font-weight: 300; line-height: 1; letter-spacing: -0.01em; margin-bottom: 10px; opacity: 0; animation: fadeUp 1s ease forwards 0.5s; }
+    .hero-name-jp { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.2rem, 3vw, 2rem); font-weight: 300; letter-spacing: 0.2em; margin-bottom: 40px; opacity: 0; animation: fadeUp 1s ease forwards 0.65s; }
+    .gold { color: var(--gold); }
+    .gold-italic { color: var(--gold); font-style: italic; }
+    .hero-nav-pills { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; max-width: 700px; opacity: 0; animation: fadeUp 1s ease forwards 0.9s; }
+    .hero-nav-pills a { font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(248,246,241,0.6); text-decoration: none; padding: 8px 16px; border: 1px solid rgba(255,255,255,0.12); transition: all 0.2s; }
+    .hero-nav-pills a:hover { border-color: var(--gold); color: var(--gold); }
+    .scroll-hint { position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 8px; opacity: 0; animation: fadeUp 1s ease forwards 1.2s; }
+    .scroll-hint span { font-size: 0.55rem; letter-spacing: 0.25em; text-transform: uppercase; color: rgba(255,255,255,0.3); }
+    .scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, rgba(201,168,76,0.6), transparent); animation: scrollPulse 2s ease-in-out infinite; }
+
+    section { padding: 100px 0; border-top: 1px solid rgba(255,255,255,0.06); }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 48px; }
+    .section-label { font-size: 0.6rem; letter-spacing: 0.35em; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; }
+    .section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 300; line-height: 1.1; margin-bottom: 8px; }
+    .section-role { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 40px; }
+    .section-body { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
+    .section-body.full { grid-template-columns: 1fr; max-width: 860px; }
+    .section-text { font-size: 0.9rem; line-height: 1.9; color: rgba(248,246,241,0.7); }
+    .section-text a { color: var(--gold); text-decoration: none; border-bottom: 1px solid rgba(201,168,76,0.3); transition: border-color 0.2s; }
+    .section-text a:hover { border-color: var(--gold); }
+    .section-text p + p { margin-top: 16px; }
+
+    .video-wrap { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; margin-top: 24px; }
+    .video-wrap iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+    .video-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 32px; }
+    .video-grid .video-wrap { margin-top: 0; }
+
+    .img-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+    .img-grid img { width: 100%; aspect-ratio: 4/3; object-fit: cover; filter: grayscale(20%); transition: filter 0.3s; }
+    .img-grid img:hover { filter: grayscale(0%); }
+
+    .highlight-list { list-style: none; margin-top: 32px; }
+    .highlight-list li { font-size: 0.75rem; letter-spacing: 0.1em; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.08); color: rgba(248,246,241,0.6); }
+    .highlight-list li strong { color: var(--white); font-weight: 500; }
+
+    footer { padding: 60px 48px; border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 24px; }
+    .footer-name { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; letter-spacing: 0.1em; }
+    .footer-info { font-size: 0.65rem; letter-spacing: 0.08em; color: rgba(255,255,255,0.4); line-height: 1.8; text-align: right; }
+    .footer-info a { color: var(--gold); text-decoration: none; }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes scrollPulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+    .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 768px) {
+      nav { padding: 10px 16px; }
+      .nav-logo { font-size: 0.85rem; }
+      .nav-links { display: none; }
+      .container { padding: 0 20px; }
+      section { padding: 70px 0; }
+      .section-body { grid-template-columns: 1fr; gap: 32px; }
+      .video-grid { grid-template-columns: 1fr; }
+      footer { padding: 40px 20px; flex-direction: column; align-items: flex-start; }
+      .footer-info { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="#hero" class="nav-logo">すみません</a>
+  <ul class="nav-links">
+    <li><a href="#north">True North</a></li>
+    <li><a href="#happy">Happy</a></li>
+    <li><a href="#manga">Manga</a></li>
+    <li><a href="#mindfulness">Mindfulness</a></li>
+    <li><a href="#school">Life School</a></li>
+    <li><a href="#zen">Zen Hideaway</a></li>
+    <li><a href="#ted">TED</a></li>
+    <li><a href="#tv">Television</a></li>
+    <li><a href="#journey">The Journey</a></li>
+  </ul>
+</nav>
+
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">Storyteller</p>
+    <h1 class="hero-name"><span class="gold-italic">Eiji</span> Han <span class="gold">Shimizu</span></h1>
+    <p class="hero-name-jp">清水 <span class="gold">ハン</span> 栄治</p>
+    <div class="hero-nav-pills">
+      <a href="#north">True North</a>
+      <a href="#happy">Happy</a>
+      <a href="#manga">Manga Biographies</a>
+      <a href="#mindfulness">Mindfulness</a>
+      <a href="#school">The Life School</a>
+      <a href="#zen">Zen Hideaway</a>
+      <a href="#workshop">Happiness Workshop</a>
+      <a href="#quest">Happy Quest</a>
+      <a href="#ted">TED</a>
+      <a href="#tv">Television</a>
+      <a href="#journey">The Journey...</a>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<section id="north">
+  <div class="container">
+    <p class="section-label reveal">Animated Film</p>
+    <h2 class="section-title reveal">True North</h2>
+    <p class="section-role reveal">Director / Writer / Producer</p>
+    <div class="section-body reveal">
+      <div class="section-text">
+        <p>While wrongly imprisoned in a political prison camp, a young boy from Pyongyang faces daily atrocities that test his belief in the innate goodness of human.</p>
+        <p><a href="https://true-north.jp">More on TRUE NORTH</a></p>
+        <div class="video-wrap">
+          <iframe src="https://www.youtube.com/embed/w51LIyqMYIw" allowfullscreen loading="lazy"></iframe>
+        </div>
+      </div>
+      <div class="img-grid">
+        <img src="images/screenshot2020-02-24.webp" alt="True North">
+        <img src="images/screenshot2020-05-17.webp" alt="True North">
+        <img src="images/12240292_10153839207440992_4559255814851406831_o.jpg.webp" alt="True North">
+        <img src="images/E1rQFKIVIAgUJmy.jpeg.webp" alt="True North">
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="happy">
+  <div class="container">
+    <p class="section-label reveal">Documentary Film</p>
+    <h2 class="section-title reveal">Happy</h2>
+    <p class="section-role reveal">Producer / 2nd Unit Director / Cinematographer</p>
+    <div class="section-body reveal">
+      <div class="section-text">
+        <p>Eiji, as the producer, and Roko Belic, Academy nominated director, bring HAPPY, a film that sets out to answer these questions and more. Taking us from the bayous of Louisiana to the deserts of Namibia, from the beaches of Brazil to the neuroscience lab in leading Universities.</p>
+        <p><a href="http://www.thehappymovie.com/">HAPPY</a> explores the secrets behind our most valued emotion.</p>
+        <div class="video-wrap">
+          <iframe src="https://www.youtube.com/embed/JcMQmuvzPmI" allowfullscreen loading="lazy"></iframe>
+        </div>
+      </div>
+      <div class="img-grid">
+        <img src="images/398489_10150659a121701096_1851622641_n.jpeg.webp" alt="Happy Movie">
+        <img src="images/IMG_3106.PNG.webp" alt="Happy Movie">
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="manga">
+  <div class="container">
+    <p class="section-label reveal">Publishing</p>
+    <h2 class="section-title reveal">Manga Biographies</h2>
+    <p class="section-role reveal">Publisher / Producer / Writer</p>
+    <div class="section-body reveal">
+      <div class="section-text">
+        <p>Eiji is the founder of Emotional Content LLC., which issues worldwide "Biographic Novel" — a series of MANGA biographies through Penguin Books. Together with talented comic book artists, he describes the ways of life of heroes who had changed the world.</p>
+        <p>Subjects include the <a href="http://www.penguinrandomhouse.com/books/307333/the-14th-dalai-lama-by-tetsu-saiwai/9780143118152/">14th Dalai Lama</a>, <a href="https://www.penguinrandomhouse.com/books/309958/gandhi-by-kazuki-ebine-illustrated-by-kazuki-ebine/">Mahatma Gandhi</a>, <a href="https://www.ibcpub.co.jp/manga_ijinden/9784794600929.html">Mother Teresa</a>, <a href="https://www.penguin.com.au/books/che-guevara-a-manga-biography-9780143118169">Che Guevara</a>, and more.</p>
+        <p>The series is now published in over 25 countries, and in more than 10 languages.</p>
+      </div>
+      <div class="img-grid">
+        <img src="images/534842_10151084535380992_1825792850_n.jpg.webp" alt="Manga Biographies">
+        <img src="images/faces.jpg.webp" alt="Manga Biographies">
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="mindfulness">
+  <div class="container">
+    <p class="section-label reveal">Practice</p>
+    <h2 class="section-title reveal">Mindfulness</h2>
+    <p class="section-role reveal">Facilitator / Lecturer</p>
+    <div class="section-body reveal">
+      <div class="section-text">
+        <p>Eiji develops and delivers empirically validated mindfulness-based programs to enhance well-being and emotional balance of participants in conferences and seminars internationally. His unique, innovative and entertaining program includes games, singing, journaling, cognitive therapy, and various meditation techniques from around the world.</p>
+        <p>Learn more: <a href="http://happinesstraining.org/">happinesstraining.org</a></p>
+        <ul class="highlight-list">
+          <li><strong>Certified Instructor</strong> · <a href="https://siyli.org">Search Inside Yourself</a> — Mindfulness-based EQ program developed at Google</li>
+          <li><strong>Certified Instructor</strong> · <a href="http://cultivating-emotional-balance.org/">Cultivating Emotional Balance</a></li>
+          <li><strong>Certified Instructor Level 2</strong> · <a href="https://www.wimhofmethod.com">Wim Hof Method</a></li>
+          <li><strong>Yamabushi Monk</strong> · Shugendo — Japanese mountain ascetic hermits</li>
+        </ul>
+      </div>
+      <div class="img-grid">
+        <img src="images/12039154_976307625766117_8759978520747674768_o.jpg.webp" alt="Mindfulness">
+        <img src="images/10922728_10153271179420992_1237869517344570264_n.jpg.webp" alt="Mindfulness">
+        <img src="images/24068538_10156335886591336_3644048290358173493_o.jpg.webp" alt="Mindfulness">
+        <img src="images/40623220_10156893242380992_4285636277685977088_o.jpg.webp" alt="Mindfulness">
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="school">
+  <div class="container">
+    <p class="section-label reveal">Education</p>
+    <h2 class="section-title reveal">The Life School</h2>
+    <p class="section-role reveal">Principal / Founder</p>
+    <div class="section-body full reveal">
+      <div class="section-text">
+        <p>Founded <a href="https://www.life-school.net">The Life School</a>, a grassroots initiative to teach Japanese and Korean corporate employees how to bring playfulness, mindfulness, curiosity and creativity into the workplace and into their lives.</p>
+      </div>
+      <div class="video-grid">
+        <div class="video-wrap"><iframe src="https://player.vimeo.com/video/926959106" allowfullscreen loading="lazy"></iframe></div>
+        <div class="video-wrap"><iframe src="https://player.vimeo.com/video/926959066" allowfullscreen loading="lazy"></iframe></div>
+        <div class="video-wrap"><iframe src="https://player.vimeo.com/video/926958948" allowfullscreen loading="lazy"></iframe></div>
+        <div class="video-wrap"><iframe src="https://player.vimeo.com/video/926959008" allowfullscreen loading="lazy"></iframe></div>
+        <div class="video-wrap"><iframe src="https://player.vimeo.com/video/926958884" allowfullscreen loading="lazy"></iframe></div>
+        <div class="video-wrap"><iframe src="https://player.vimeo.com/video/926958646" allowfullscreen loading="lazy"></iframe></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="zen">
+  <div class="container">
+    <p class="section-label reveal">Architecture</p>
+    <h2 class="section-title reveal">Zen Hideaway</h2>
+    <p class="section-role reveal">Architect / Designer</p>
+    <div class="section-body reveal">
+      <div class="section-text">
+        <p>Designed <a href="https://www.instagram.com/explore/locations/1710251659229378/zen-hideaway/">Zen Hideaway</a>, meditator-friendly villas in Bali, which was chosen as one of the most artistic villas in the world by Côte Sud magazine, featured in Netflix, GoPro, and OPPO ads.</p>
+        <p>The birthplace of the world famous swing entertainment in Bali.</p>
+      </div>
+      <div class="img-grid">
+        <img src="images/d.JPG.webp" alt="Zen Hideaway">
+        <img src="images/DSC04002.jpg.webp" alt="Zen Hideaway">
+        <img src="images/b.JPG.webp" alt="Zen Hideaway">
+        <img src="images/DSC01836.jpg.webp" alt="Zen Hideaway">
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="workshop">
+  <div class="container">
+    <p class="section-label reveal">Speaking</p>
+    <h2 class="section-title reveal">Happiness Workshop</h2>
+    <p class="section-role reveal">Facilitator / Lecturer</p>
+    <div class="section-body reveal">
+      <div class="section-text">
+        <p>Together with researchers, Eiji develops and delivers empirically validated mindfulness-based programs to enhance well-being and emotional balance of participants in conferences and seminars internationally.</p>
+        <p>His unique, innovative and entertaining program includes games, singing, journaling, cognitive therapy, as well as various meditation techniques from around the world, and the latest scientific findings on well-being and regulation of emotions.</p>
+        <p>Learn more: <a href="http://happinesstraining.org/">happinesstraining.org</a></p>
+      </div>
+      <div class="img-grid">
+        <img src="images/IMGq_1841.jpg.webp" alt="Happiness Workshop">
+        <img src="images/11259910_10153710699985992_7870702067415684376_n.jpg.webp" alt="Happiness Workshop">
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="quest">
+  <div class="container">
+    <p class="section-label reveal">Book</p>
+    <h2 class="section-title reveal">Happy Quest</h2>
+    <p class="section-role reveal">Author</p>
+    <div class="section-body reveal">
+      <div class="section-text">
+        <p>Gamification of Happiness &amp; Mindfulness enhancement in a book. Eiji also participated in other book projects on happiness as an editorial supervisor, an afterword contributor, and more.</p>
+      </div>
+      <div class="img-grid">
+        <img src="images/static1.squarespace.png.webp" alt="Happy Quest">
+        <img src="images/81ER3TbvgwL.jpg.webp" alt="Happy Quest">
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="ted">
+  <div class="container">
+    <p class="section-label reveal">TED</p>
+    <h2 class="section-title reveal">TED Residency</h2>
+    <p class="section-role reveal">TED Resident 2017</p>
+    <div class="section-body reveal">
+      <div class="section-text">
+        <p>Chosen into TED Residency 2017, and incubated an idea worth spreading at the HQs in Manhattan.</p>
+      </div>
+      <div class="img-grid">
+        <img src="images/240748_10150264093550992_1923972_o.jpg.webp" alt="TED">
+        <img src="images/576986_10151013108005992_1787214916_n.jpg.webp" alt="TED">
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="tv">
+  <div class="container">
+    <p class="section-label reveal">Television</p>
+    <h2 class="section-title reveal">Happiness TV Program</h2>
+    <p class="section-role reveal">Host / Researcher</p>
+    <div class="section-body full reveal">
+      <div class="section-text">
+        <p>Making a hugely popular TV program for NHK, titled <a href="http://www.nhk.or.jp/hakunetsu/">"Hakunetsu Kyoshitu"</a>, on happiness researches around the world.</p>
+        <div class="video-wrap">
+          <iframe src="https://www.dailymotion.com/embed/video/x19jszh" allowfullscreen loading="lazy"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="journey">
+  <div class="container">
+    <p class="section-label reveal">Biopic</p>
+    <h2 class="section-title reveal">The Journey is the Destination</h2>
+    <p class="section-role reveal">Portrayed</p>
+    <div class="section-body full reveal">
+      <div class="section-text">
+        <p><a href="https://www.netflix.com/title/80173002">The Journey is the Destination</a> is a biopic based on the remarkable true story of the life of Dan Eldon, a photographer, artist and adventurer. Tanroh Ishida played the role of Eiji at the age of 19 in the film.</p>
+        <div class="video-wrap">
+          <iframe src="https://www.youtube.com/embed/8V5QjP_LCrQ" allowfullscreen loading="lazy"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-name"><span class="gold-italic">Eiji</span> Han <span class="gold">Shimizu</span></div>
+  <div class="footer-info">
+    <span style="color:var(--gold)">すみません</span>合同会社<br>
+    〒153-0064 東京都目黒区下目黒1-8-39-1-1303<br>
+    SUMIMASEN Ltd.<br>
+    <a href="mailto:latinsamurai@gmail.com">latinsamurai@gmail.com</a>
+  </div>
+</footer>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
